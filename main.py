@@ -3,6 +3,9 @@ import time
 #from datetime import datetime
 from lib.LTR329ALS01 import LTR329ALS01
 
+# flashing device
+# os.mkfs('/flash')
+
 
 LED_DEFAULT = 0xFFFFFF
 led_on = True
