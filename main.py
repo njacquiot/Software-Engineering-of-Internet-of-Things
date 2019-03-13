@@ -2,6 +2,8 @@ import pycom
 import time
 #from datetime import datetime
 from lib.LTR329ALS01 import LTR329ALS01
+import Exercices.exercise5_device1
+import Exercices.exercise5_device2
 
 # flashing device
 # os.mkfs('/flash')
@@ -37,7 +39,7 @@ def light_sensor():
         # print("\rLignt Sensor: " + str(ch0_value) + "  ", end = "")
     previous_light = ch0_value
 
-
+'''
 while True:
     shift_led()
 
@@ -45,3 +47,7 @@ while True:
         light_sensor()
 
     freeze(0.5)
+'''
+
+#Exercices.exercise5_device1.run()
+Exercices.exercise5_device2.run()
