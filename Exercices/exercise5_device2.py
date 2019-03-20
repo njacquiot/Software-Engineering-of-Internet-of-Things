@@ -7,7 +7,7 @@ from lib.LIS2HH12 import LIS2HH12
 from lib.SI7006A20 import SI7006A20
 from lib.LTR329ALS01 import LTR329ALS01
 from lib.MPL3115A2 import MPL3115A2,ALTITUDE,PRESSURE
-import logger
+#import logger
 
 py = Pysense()
 lt = LTR329ALS01(py)
@@ -16,7 +16,7 @@ lt = LTR329ALS01(py)
 pycom.heartbeat(False)
 previous_light = 0
 
-file = open('data.txt', 'w+')
+file = open('data.txt', 'a+')
 
 def listen_light_sensor():
     global previous_light
@@ -24,8 +24,8 @@ def listen_light_sensor():
     # Channel 0 adapted for short wavelengths (400 - 800 nm) / Channel 1 adapted for higher wavelengths (500 - 1000 nm)
     ch0_value, ch1_value = lt.light()
     if ch0_value != previous_light :
-        logger.log_time(file)
-        #print(utime.ticks_ms())
+        file.write(str(utime.ticks_ms()) + "\n")
+        print(utime.ticks_ms())
     previous_light = ch0_value
 
 def run():
