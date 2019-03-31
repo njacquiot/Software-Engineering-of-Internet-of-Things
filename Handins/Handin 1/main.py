@@ -16,4 +16,16 @@ Handin Procedure: Send as PDF to asjo@mmmi.sdu.dk with subject
 "SDU IoT 2019f: Handin 1 - Full-Circle Latency"
 '''
 
-# TODO
+import pycom
+import time
+from lib.LTR329ALS01 import LTR329ALS01
+import device1
+import device2
+#import Exercices.logger
+
+# flashing device
+# os.mkfs('/flash')
+
+# We switch between the two devices
+#device1.run()
+device2.run()

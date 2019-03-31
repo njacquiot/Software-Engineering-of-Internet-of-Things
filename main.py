@@ -9,5 +9,5 @@ import Exercices.exercise5_device2
 # os.mkfs('/flash')
 
 # We switch between the two devices
-#Exercices.exercise5_device1.run()
-Exercices.exercise5_device2.run()
+Exercices.exercise5_device1.run()
+#Exercices.exercise5_device2.run()
