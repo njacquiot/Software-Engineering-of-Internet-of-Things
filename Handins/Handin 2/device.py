@@ -8,6 +8,7 @@ from MPL3115A2 import MPL3115A2,ALTITUDE,PRESSURE
 import time
 import machine
 from machine import Timer
+from machine import Pin
 
 py = Pysense()
 mp = MPL3115A2(py,mode=ALTITUDE) # Returns height in meters. Mode may also be set to PRESSURE, returning a value in Pascals
@@ -25,20 +26,27 @@ file = open('data.txt', 'a')
 
 
 adc = machine.ADC() 
-apin = adc.channel(pin='P19')
-
+p_out = Pin('P19', mode= Pin.OUT)#, pull=Pin.PULL_UP) #mode out et HIGH
+p_out.value(1)
+p_in = Pin('P16', mode= Pin.IN)
+#apin = adc.channel(pin = p_out)
+apin = adc.channel(pin = p_in)
 
 
 def run():
     while True:
         
-       # print("Temperature: " + str(mp.temperature()*0.75))
-        #file.write(str(mp.temperature()*0.75))
-        val = apin()
-        volt = apin.voltage()
-        print("Time " + str(chrono.read_ms()))
-        print(volt)
-        freeze(1)
+       #print("Temperature: " + str(si.temperature()*0.75))
+       #file.write(str(mp.temperature()*0.75))
+       val = apin()
+       millivolts = apin.voltage()
+       degC = (millivolts-500)/10 #10mV/°C + offset of 500mV
+       
+       print("V : " + str(millivolts))
+       print("T : " + str(degC))
+       #print(degF)
+       #print(volt)
+       freeze(1)
 
 
 

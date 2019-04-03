@@ -21,7 +21,7 @@ previous_light = 0
 chrono = Timer.Chrono()
 chrono.start()
 
-file = open('data.txt', 'a')
+file = open('data.txt', 'w')
 
 def listen_light_sensor():
     global previous_light
@@ -34,7 +34,8 @@ def listen_light_sensor():
     previous_light = ch0_value
 
 def run():
-    while True:
+    while chrono.read_ms()<5000:
         listen_light_sensor()
+    file.close()
 
 

@@ -30,6 +30,7 @@ file = open('data.txt', 'w')
 def shift_led():
     global led_on
     pycom.rgbled(LED_DEFAULT if led_on else ~LED_DEFAULT)
+    print(str(utime.ticks_ms()) + "\n")
     file.write(str(utime.ticks_ms()) + "\n")
     led_on = not(led_on)
 

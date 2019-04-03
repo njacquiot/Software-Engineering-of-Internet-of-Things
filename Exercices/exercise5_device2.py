@@ -16,7 +16,7 @@ lt = LTR329ALS01(py)
 pycom.heartbeat(False)
 previous_light = 0
 
-file = open('data.txt', 'a+')
+file = open('data.txt', 'a')
 
 def listen_light_sensor():
     global previous_light

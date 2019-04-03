@@ -29,20 +29,24 @@ pycom.heartbeat(False)
 def freeze(sec = 0):
     time.sleep(sec)
     
-file = open('data.txt', 'a')
+file = open('data.txt', 'w')
+
 
 def shift_led():
+    #file = open('data.txt', 'a')
     global led_on
     pycom.rgbled(LED_DEFAULT if led_on else ~LED_DEFAULT)
+    
     print(str(chrono.read_ms()) + "\n")
+
     file.write(str(chrono.read_ms()) + "\n")
     led_on = not(led_on)
 
 def run():
-    while True:
+    while chrono.read_ms()<5000:
         shift_led()
         freeze(0.1)  # 10 Hz  
-
+    file.close()
         # 100 Hz -> 0.01 sec
         # By having the light blinking at the rate of 100 Hz there was no visible 
         # change in the light, kind of like it was always on
