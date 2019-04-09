@@ -42,3 +42,13 @@ import device
 
 device.run()
 
+'''
+Experiment:
+
+Datapoint 1 room temperature
+Pycom T: 17,6
+Real T: 20,6
+Datapoint 2 in palm
+Pycom T: 
+Real T: 20,6
+'''

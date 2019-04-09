@@ -40,7 +40,7 @@ def run():
        #file.write(str(mp.temperature()*0.75))
        val = apin()
        millivolts = apin.voltage()
-       degC = (millivolts-500)/10 #10mV/°C + offset of 500mV
+       degC = (millivolts-501,29)/8,2289 #10mV/°C + offset of 500mV
        
        print("V : " + str(millivolts))
        print("T : " + str(degC))
