@@ -26,7 +26,17 @@ def run() :
     s.setblocking(False)
 
     while True:
-        if s.recv(64) == b'Ping':
-            print(s.recv(64).decode('utf-8'))
-            s.send('Pong')
-        #time.sleep(5)
+        data = s.recv(64)
+        if data != b'':
+            print(data)
+
+
+'''
+    while True:
+        data = s.recv(64)
+        if data[0:4] == b'Ping':
+            print(data)
+            s.send(b'Pong')
+        time.sleep(3)
+
+'''

@@ -19,10 +19,25 @@ import time
 # Europe = LoRa.EU868
 # United States = LoRa.US915
 
+py = Pysense()
+lt = LTR329ALS01(py)
+
 def run() :
-   lora = LoRa(mode=LoRa.LORA, region=LoRa.EU868)
-   s = socket.socket(socket.AF_LORA, socket.SOCK_RAW)
-   s.setblocking(False)
-   while True:
-      s.send('Ping'.encode('utf-8'))
-      time.sleep(5)
+	lora = LoRa(mode=LoRa.LORA, region=LoRa.EU868)
+	s = socket.socket(socket.AF_LORA, socket.SOCK_RAW)
+	s.setblocking(False)
+	previous_light = 0
+
+	while True:
+		ch0_value, ch1_value = lt.light()
+		if ch0_value != previous_light :
+			s.send(b''+str(ch0_value))
+			print(ch0_value)
+			previous_light = ch0_value
+		#time.sleep(1)
+		'''
+		data = s.recv(64)
+		if(data[0:4] == b'Pong'):
+			print(data)
+			s.send(message)
+			'''
