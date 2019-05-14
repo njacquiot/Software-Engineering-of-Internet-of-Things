@@ -49,10 +49,11 @@ def run():
 ############################################################ MQTT connection/Sending ##############################################
 
 	
-		client = MQTTClient(client_id="example_client", server="io.adafruit.com", user="Dragos123", password="0af871aaeb2f4341b43ccd92f745a8d0", port=1883) 
+		client = MQTTClient(client_id="example_client", server="io.adafruit.com", user="nicojacq", password="93cacffc52f7431e9366af782b66f401", port=1883) 
 		client.set_callback(sub_cb) 
 		client.connect()
-		client.subscribe(topic="Dragos123/feeds/lights") 
+		client.subscribe(topic="nicojacq/feeds/light") 
+		client.subscribe(topic="nicojacq/feeds/temperature") 
 
 		############################################################### LoRa Connection ###########################################
 
@@ -71,11 +72,18 @@ def run():
 		lora = LoRa(mode=LoRa.LORA, region=LoRa.EU868)
 		s = socket.socket(socket.AF_LORA, socket.SOCK_RAW)
 		s.setblocking(False)
-		previous_light = 0
 
-		while chrono2.read_ms()<5000:
+		while True:
 			data = s.recv(64)
 			if data != b'':
-				data2 = str(data).strip("b'")
-				print("Light : " + data2)
-				client.publish(topic="Dragos123/feeds/lights", msg=data2)
+				payload = str(data).strip("b'")
+				array = payload.split("|")
+				light = array[0]
+				temperature = array[1]
+				#humidity = array[2]
+				#print("chrono : "+ str(chrono2.read_ms()))
+				print("Light : " + light)
+				print("Temperature : "+temperature)
+				client.publish(topic="nicojacq/feeds/light", msg=light)
+				client.publish(topic="nicojacq/feeds/temperature", msg=temperature)
+				data = b''
