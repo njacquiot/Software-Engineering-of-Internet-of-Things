@@ -32,25 +32,29 @@ p_in = Pin('P16', mode= Pin.IN)
 #apin = adc.channel(pin = p_out)
 apin = adc.channel(pin = p_in)
 
+def convertMillivoltsToCelcius(millivolts):
+    degC = 0
+    if (machine.unique_id() == b'\x80}:\xc2\xde\xe4'): 
+        # dark plastic
+        degC = (millivolts-500.43)/8.7587
+    elif (machine.unique_id() == b'0\xae\xa4NYx'):
+        # light plastic
+        degC = (millivolts-500.73)/8.2135
+    return degC
 
 def run():
     while True:
+        #print("Temperature: " + str(si.temperature()*0.75))
+        # #file.write(str(mp.temperature()*0.75))
+        val = apin()
+        millivolts = apin.voltage()
+        degC = convertMillivoltsToCelcius(millivolts)
         
-       #print("Temperature: " + str(si.temperature()*0.75))
-       #file.write(str(mp.temperature()*0.75))
-       val = apin()
-       millivolts = apin.voltage()
-       degC = (millivolts-501,29)/8,2289 #10mV/°C + offset of 500mV
-       
-       print("V : " + str(millivolts))
-       print("T : " + str(degC))
-       #print(degF)
-       #print(volt)
-       freeze(1)
-
-
-
-
+        print("V : " + str(millivolts))
+        print("T : " + str(degC))
+        #print(degF)
+        #print(volt)
+        freeze(1)
 
         #print("Altitude: " + str(mp.altitude()))
         #mpp = MPL3115A2(py,mode=PRESSURE) # Returns pressure in Pa. Mode may also be set to ALTITUDE, returning a value in meters
