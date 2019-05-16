@@ -1,0 +1,18 @@
+{
+    "temperatureAcceptedOffset" : "5",
+    "rateOfSampling" : "10", 
+    "data" : [
+        {
+            "time" : "13:08",
+            "temperature" : "10"
+        },
+        {
+            "time" : "13:10",
+            "temperature" : "100"
+        },
+        {
+            "time" : "15:15",
+            "temperature" : "10"
+        }
+    ]
+}

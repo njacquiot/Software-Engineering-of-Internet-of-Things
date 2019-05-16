@@ -45,9 +45,15 @@ def run() :
     apin = adc.channel(pin = p_in)
 
     si = SI7006A20(py)
+    
+    rateOfSampling = 5 # default value
 
     
     while True:
+        data = s.recv(64)
+        if data != b'':
+            payload = str(data).strip("b'")
+            rateOfSampling = payload
         ch0_value, ch1_value = lt.light()
         val = apin()
         millivolts = apin.voltage()
@@ -56,7 +62,8 @@ def run() :
         #humidity = si.humidity() 
 
         payload = str(ch0_value) + "|" + str(degC) #+ "|" + str(humidity)
+        print(rateOfSampling)
 
-        time.sleep(5)
+        time.sleep(rateOfSampling)
         s.send(b''+payload)
         print("send")
