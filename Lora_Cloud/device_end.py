@@ -21,18 +21,16 @@ import math
 # Europe = LoRa.sEU868
 # United States = LoRa.US915
 
-
-
-
 def run() :
     lora = LoRa(mode=LoRa.LORA, region=LoRa.EU868)
     s = socket.socket(socket.AF_LORA, socket.SOCK_RAW)
     s.setblocking(False)
-    previous_light = 0
+    print(lora.power_mode())
+    #print(lora.tx_ower())
+    print(lora.sf())
+    
     chrono = Timer.Chrono()
     chrono.start()
-    time_step = 5
-
 
     py = Pysense()
     lt = LTR329ALS01(py) #Light
@@ -44,26 +42,66 @@ def run() :
     #apin = adc.channel(pin = p_out)
     apin = adc.channel(pin = p_in)
 
-    si = SI7006A20(py)
-    
-    rateOfSampling = 5 # default value
-
+    rateOfSampling = 30 # default value
+    numberForAverage = 10
+    lightValues = []
+    millivoltValues = []
     
     while True:
+
+        # recieving rateOfSampling from gateway when it arrives
         data = s.recv(64)
         if data != b'':
             payload = str(data).strip("b'")
-            rateOfSampling = payload
+            rateOfSampling = float(payload)
+        
         ch0_value, ch1_value = lt.light()
+        lightValues.append(ch0_value)
+
         val = apin()
         millivolts = apin.voltage()
-        degC = (millivolts-501.29)/8.2289 #10mV/°C + offset of 500mV
+        #print(millivolts)
+        millivoltValues.append(millivolts)
 
-        #humidity = si.humidity() 
+        if (len(lightValues) == numberForAverage or len(millivoltValues) == numberForAverage):
 
-        payload = str(ch0_value) + "|" + str(degC) #+ "|" + str(humidity)
-        print(rateOfSampling)
+            lightAverage = Average(lightValues)
+            millivoltAverage = Average(millivoltValues)
+            print(millivoltAverage)
+            degC = convertMillivoltsToCelcius(millivoltAverage)
+            #humidity = si.humidity()
+            room = convertIdtoRoom(machine.unique_id()) 
 
-        time.sleep(rateOfSampling)
-        s.send(b''+payload)
-        print("send")
+            payload = str(lightAverage) + "|" + str(degC) +"|" + room #+ "|" + str(humidity)
+            s.send(b''+payload)
+            print("sending payload: ")
+            print(payload)
+
+            lightValues = []
+            millivoltValues = []
+            lightAverage = 0
+            millivoltAverage = 0
+            time.sleep(rateOfSampling)
+
+    
+def convertMillivoltsToCelcius(millivolts):
+    degC = 0
+    if (machine.unique_id() == b'\x80}:\xc2\xde\xe4'):
+        # dark plastic
+        degC = (millivolts-500.43)/8.7587
+    elif (machine.unique_id() == b'0\xae\xa4NYx'):
+        # light plastic
+        degC = (millivolts-500.73)/8.2135
+    return degC
+
+def convertIdtoRoom(device_id):
+    if (device_id == b'\x80}:\xc2\xde\xe4'):
+        # dark plastic
+        room = "room-1"
+    elif (device_id == b'0\xae\xa4NYx'):
+        # light plastic
+        room = "room-2"
+    return room
+
+def Average(lst): 
+    return sum(lst) / len(lst)

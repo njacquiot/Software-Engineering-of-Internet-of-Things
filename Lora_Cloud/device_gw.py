@@ -44,8 +44,8 @@ def run():
 	if wlan.isconnected() == False:
 		for net in nets:
 			print(net.ssid)
-			if net.ssid == 'Xperia XA2_83f4':
-				wlan.connect(net.ssid, auth=(net.sec, 'jujujacq0611'), timeout=5000)
+			if net.ssid == 'HomeBox-08E0':
+				wlan.connect(net.ssid, auth=(net.sec, '7d5a29ded'), timeout=5000)
 				break
 
 
@@ -73,11 +73,11 @@ def run():
 ############################################################ MQTT connection/Sending ##############################################
 
 	
-		client = MQTTClient(client_id="example_client", server="io.adafruit.com", user="Dragos123", password="0af871aaeb2f4341b43ccd92f745a8d0", port=1883) 
+		client = MQTTClient(client_id="example_client", server="io.adafruit.com", user="nicojacq", password="93cacffc52f7431e9366af782b66f401", port=1883) 
 		client.set_callback(sub_cb) 
 		client.connect()
-		client.subscribe(topic="Dragos123/feeds/lights") 
-		client.subscribe(topic="Dragos123/feeds/temperature") 
+		#client.subscribe(topic="Dragos123/feeds/lights") 
+		#client.subscribe(topic="Dragos123/feeds/temperature") 
 
 		############################################################### LoRa Connection ###########################################
 
@@ -102,7 +102,10 @@ def run():
 		while True:
 			data = s.recv(64)
 			datetime = rtc.now()
-			now = str(datetime[3])+":"+str(datetime[4])
+			minute = str(datetime[4])
+			if(datetime[4]<10):
+				minute = "0"+str(datetime[4])
+			now = str(datetime[3])+":"+minute
 			#print(now)
 			#now = "15:00"
 
@@ -130,18 +133,19 @@ def run():
 				array = payload.split("|")
 				light = array[0]
 				temperature = array[1]
-				#humidity = array[2]
+				room = array[2]
+				#humidity = array[3]
 				#print("chrono : "+ str(chrono2.read_ms()))
 				print("Light : " + light)
 				print("Temperature : "+temperature)
-
+				print("Id : "+ room)
 				if(float(temperature)<float(found['temperature'])-float(userData["temperatureAcceptedOffset"])):
-					client.publish(topic="Dragos123/feeds/termostate-status", msg="#00ffff")
+					client.publish(topic="nicojacq/feeds/"+room+"-thermostat-status", msg="#00ffff")
 				elif(float(temperature)>float(found['temperature'])+float(userData["temperatureAcceptedOffset"])):
-					client.publish(topic="Dragos123/feeds/termostate-status", msg="#ff0000")
+					client.publish(topic="nicojacq/feeds/"+room+"-thermostat-status", msg="#ff0000")
 				else :
-					client.publish(topic="Dragos123/feeds/termostate-status", msg="#00ff00")
+					client.publish(topic="nicojacq/feeds/"+room+"-thermostat-status", msg="#00ff00")
 				
-				client.publish(topic="Dragos123/feeds/lights", msg=light)
-				client.publish(topic="Dragos123/feeds/temperature", msg=temperature)
+				client.publish(topic="nicojacq/feeds/"+room+"-lights", msg=light)
+				client.publish(topic="nicojacq/feeds/"+room+"-temperature", msg=temperature)
 				data = b''

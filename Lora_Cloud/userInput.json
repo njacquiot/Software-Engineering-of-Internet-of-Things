@@ -1,17 +1,29 @@
 {
-    "temperatureAcceptedOffset" : "5",
-    "rateOfSampling" : "10", 
+    "temperatureAcceptedOffset" : "2",
+    "rateOfSampling" : "30", 
     "data" : [
         {
-            "time" : "13:08",
+            "time" : "16:00",
+            "temperature" : "20"
+        },
+        {
+            "time" : "18:00",
             "temperature" : "10"
         },
         {
-            "time" : "13:10",
-            "temperature" : "100"
+            "time" : "18:30",
+            "temperature" : "15"
         },
         {
-            "time" : "15:15",
+            "time" : "19:00",
+            "temperature" : "20"
+        },
+        {
+            "time" : "19:30",
+            "temperature" : "12"
+        },
+        {
+            "time" : "20:00",
             "temperature" : "10"
         }
     ]
